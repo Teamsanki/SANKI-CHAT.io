@@ -3,34 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebRTC Voice Call</title>
+  <title>WebRTC App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="chat-room">
-    <h1>Chat Room</h1>
-    <div id="user-info">
-      <p>User: <span id="user-name">John Doe</span></p>
-    </div>
-
-    <button id="call-button">Start Voice Call</button>
-    <button id="end-call-button" style="display:none;">End Call</button>
-    <audio id="remoteAudio" autoplay></audio>
-    <audio id="localAudio" autoplay muted></audio>
-    
-    <div id="chat-window"></div>
-
-    <div id="chat-message-container">
-      <input type="text" id="chat-message" placeholder="Type a message..." />
-      <button id="send-message">Send</button>
-    </div>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>Welcome to WebRTC App</h1>
   </div>
 
-  <!-- Firebase and WebRTC Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.9.0/firebase-auth.js"></script>
+  <!-- Registration/Login Form -->
+  <div id="auth-container" class="hidden">
+    <h2>Register/Login</h2>
+    <form id="auth-form">
+      <input type="email" id="email" placeholder="Enter Email" required>
+      <input type="password" id="password" placeholder="Enter Password" required>
+      <button type="submit" id="auth-btn">Register/Login</button>
+    </form>
+  </div>
 
+  <!-- Chat and Call UI -->
+  <div id="chat-container" class="hidden">
+    <h2>Welcome, <span id="user-email"></span></h2>
+    <button id="start-call">Start Call</button>
+    <audio id="remote-audio" controls autoplay></audio>
+    <button id="logout">Logout</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
