@@ -6,52 +6,67 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 2000); // Show splash screen for 2 seconds
 });
 
-// Authentication Logic
-const authForm = document.getElementById('auth-form');
-const emailField = document.getElementById('email');
-const passwordField = document.getElementById('password');
-const authBtn = document.getElementById('auth-btn');
-const userDisplay = document.getElementById('user-email');
-const chatContainer = document.getElementById('chat-container');
-const authContainer = document.getElementById('auth-container');
+// Toggle Between Login and Registration
+const toggleAuthBtn = document.getElementById('toggle-auth');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
 
-authForm.addEventListener('submit', (e) => {
+toggleAuthBtn.addEventListener('click', () => {
+  loginForm.classList.toggle('hidden');
+  registerForm.classList.toggle('hidden');
+  toggleAuthBtn.textContent =
+    loginForm.classList.contains('hidden') ? 'Switch to Login' : 'Switch to Register';
+});
+
+// Registration Logic
+const register = document.getElementById('register');
+register.addEventListener('submit', (e) => {
   e.preventDefault();
-  const email = emailField.value;
-  const password = passwordField.value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+
+  auth.createUserWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      alert('Registration successful!');
+      showChatUI(userCredential.user);
+    })
+    .catch((error) => {
+      alert(error.message);
+    });
+});
+
+// Login Logic
+const login = document.getElementById('login');
+login.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
 
   auth.signInWithEmailAndPassword(email, password)
     .then((userCredential) => {
       showChatUI(userCredential.user);
     })
     .catch((error) => {
-      if (error.code === 'auth/user-not-found') {
-        auth.createUserWithEmailAndPassword(email, password)
-          .then((userCredential) => {
-            showChatUI(userCredential.user);
-          })
-          .catch((err) => alert(err.message));
-      } else {
-        alert(error.message);
-      }
+      alert(error.message);
     });
 });
 
+// Show Chat UI
 function showChatUI(user) {
-  userDisplay.textContent = user.email;
-  authContainer.classList.add('hidden');
-  chatContainer.classList.remove('hidden');
+  document.getElementById('user-email').textContent = user.email;
+  document.getElementById('auth-container').classList.add('hidden');
+  document.getElementById('chat-container').classList.remove('hidden');
 }
 
-// Logout
+// Logout Logic
 document.getElementById('logout').addEventListener('click', () => {
   auth.signOut().then(() => {
-    chatContainer.classList.add('hidden');
-    authContainer.classList.remove('hidden');
+    document.getElementById('chat-container').classList.add('hidden');
+    document.getElementById('auth-container').classList.remove('hidden');
   });
 });
 
-// WebRTC Logic
+// WebRTC Call Logic (same as before)
 const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
 let peerConnection;
 
@@ -92,5 +107,5 @@ document.getElementById('start-call').addEventListener('click', () => {
     if (event.candidate) {
       database.ref('calls/candidates').push(event.candidate);
     }
-  };
+  });
 });
