@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Chat App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Splash Screen -->
+  <div id="splash-screen">
+    <h1>Welcome to Random Chat</h1>
+  </div>
+
+  <!-- Login Page -->
+  <div id="login-page" style="display: none;">
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p>Don't have an account? <span id="show-register">Register</span></p>
+  </div>
+
+  <!-- Register Page -->
+  <div id="register-page" style="display: none;">
+    <h2>Register</h2>
+    <form id="register-form">
+      <input type="email" id="register-email" placeholder="Email" required>
+      <input type="password" id="register-password" placeholder="Password" required>
+      <button type="submit">Register</button>
+    </form>
+    <p>Already have an account? <span id="show-login">Login</span></p>
+  </div>
+
+  <!-- Home Page -->
+  <div id="home-page" style="display: none;">
+    <h2>Welcome, <span id="user-name"></span></h2>
+    <button id="join-random">Join Random Chat</button>
+  </div>
+
+  <!-- Chat Room -->
+  <div id="chat-room" style="display: none;">
+    <h2>Chat Room</h2>
+    <div id="chat-window"></div>
+    <input type="text" id="chat-message" placeholder="Type a message...">
+    <button id="send-message">Send</button>
+    <button id="exit-chat">Exit Chat</button>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-database.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
