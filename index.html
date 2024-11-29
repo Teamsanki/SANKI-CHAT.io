@@ -12,14 +12,29 @@
     <h1>Welcome to WebRTC App</h1>
   </div>
 
-  <!-- Registration/Login Form -->
+  <!-- Authentication Container -->
   <div id="auth-container" class="hidden">
-    <h2>Register/Login</h2>
-    <form id="auth-form">
-      <input type="email" id="email" placeholder="Enter Email" required>
-      <input type="password" id="password" placeholder="Enter Password" required>
-      <button type="submit" id="auth-btn">Register/Login</button>
-    </form>
+    <!-- Registration Form -->
+    <div id="register-form">
+      <h2>Register</h2>
+      <form id="register">
+        <input type="email" id="reg-email" placeholder="Enter Email" required>
+        <input type="password" id="reg-password" placeholder="Enter Password" required>
+        <button type="submit">Register</button>
+      </form>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form" class="hidden">
+      <h2>Login</h2>
+      <form id="login">
+        <input type="email" id="login-email" placeholder="Enter Email" required>
+        <input type="password" id="login-password" placeholder="Enter Password" required>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <button id="toggle-auth">Switch to Login</button>
   </div>
 
   <!-- Chat and Call UI -->
