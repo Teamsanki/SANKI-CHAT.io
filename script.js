@@ -1,141 +1,96 @@
-// Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAemwBwNix4TbWHA7vrh5ubQaRqEY8VWKk",
-  authDomain: "social-bite-skofficial.firebaseapp.com",
-  databaseURL: "https://social-bite-skofficial-default-rtdb.firebaseio.com",
-  projectId: "social-bite-skofficial",
-  storageBucket: "social-bite-skofficial.appspot.com",
-  messagingSenderId: "239722707022",
-  appId: "1:239722707022:web:57d9b173f2163e85be2b1f"
-};
-firebase.initializeApp(firebaseConfig);
-
-let localStream;
-let peerConnection;
-let isCaller = false;
-let remoteStream;
-
-const database = firebase.database();
-const signalingRef = database.ref('signaling');
-
-// WebRTC configuration for ICE servers
-const configuration = {
-  iceServers: [
-    { urls: 'stun:stun.l.google.com:19302' }
-  ]
-};
-
-// Get local audio stream
-async function getLocalMedia() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    document.getElementById('localAudio').srcObject = stream;
-    localStream = stream;
-  } catch (err) {
-    console.error('Error accessing media devices.', err);
-  }
-}
-
-// Create a new Peer Connection
-function createPeerConnection() {
-  peerConnection = new RTCPeerConnection(configuration);
-
-  // When remote stream is added, set it to the remote audio element
-  peerConnection.ontrack = function(event) {
-    remoteStream = event.streams[0];
-    document.getElementById('remoteAudio').srcObject = remoteStream;
-  };
-
-  // Add local stream to the connection
-  localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
-
-  // ICE Candidate handling
-  peerConnection.onicecandidate = function(event) {
-    if (event.candidate) {
-      sendSignalingMessage({
-        type: 'candidate',
-        candidate: event.candidate
-      });
-    }
-  };
-}
-
-// Send signaling messages to the Firebase database
-function sendSignalingMessage(message) {
-  signalingRef.push(message);
-}
-
-// Handle incoming signaling messages (offer, answer, candidate)
-signalingRef.on('child_added', function(snapshot) {
-  const message = snapshot.val();
-  if (message.type === 'offer') {
-    handleIncomingCall(message.offer);
-  } else if (message.type === 'answer') {
-    peerConnection.setRemoteDescription(new RTCSessionDescription(message.answer));
-  } else if (message.type === 'candidate') {
-    peerConnection.addIceCandidate(new RTCIceCandidate(message.candidate));
-  }
+// Splash Screen Logic
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    document.getElementById('splash-screen').classList.add('hidden');
+    document.getElementById('auth-container').classList.remove('hidden');
+  }, 2000); // Show splash screen for 2 seconds
 });
 
-// Initiate a call
-function initiateCall() {
-  isCaller = true;
-  createPeerConnection();
-  
-  // Create an offer and set the local description
-  peerConnection.createOffer()
-    .then(offer => {
-      return peerConnection.setLocalDescription(offer);
+// Authentication Logic
+const authForm = document.getElementById('auth-form');
+const emailField = document.getElementById('email');
+const passwordField = document.getElementById('password');
+const authBtn = document.getElementById('auth-btn');
+const userDisplay = document.getElementById('user-email');
+const chatContainer = document.getElementById('chat-container');
+const authContainer = document.getElementById('auth-container');
+
+authForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  const email = emailField.value;
+  const password = passwordField.value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      showChatUI(userCredential.user);
     })
-    .then(() => {
-      sendSignalingMessage({ type: 'offer', offer: peerConnection.localDescription });
-    })
-    .catch(err => console.error('Error creating offer', err));
+    .catch((error) => {
+      if (error.code === 'auth/user-not-found') {
+        auth.createUserWithEmailAndPassword(email, password)
+          .then((userCredential) => {
+            showChatUI(userCredential.user);
+          })
+          .catch((err) => alert(err.message));
+      } else {
+        alert(error.message);
+      }
+    });
+});
+
+function showChatUI(user) {
+  userDisplay.textContent = user.email;
+  authContainer.classList.add('hidden');
+  chatContainer.classList.remove('hidden');
 }
 
-// Handle incoming call
-function handleIncomingCall(offer) {
-  createPeerConnection();
+// Logout
+document.getElementById('logout').addEventListener('click', () => {
+  auth.signOut().then(() => {
+    chatContainer.classList.add('hidden');
+    authContainer.classList.remove('hidden');
+  });
+});
 
-  // Set the received offer as the remote description
-  peerConnection.setRemoteDescription(offer)
-    .then(() => {
-      return peerConnection.createAnswer();
+// WebRTC Logic
+const configuration = { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] };
+let peerConnection;
+
+document.getElementById('start-call').addEventListener('click', () => {
+  peerConnection = new RTCPeerConnection(configuration);
+  const remoteAudio = document.getElementById('remote-audio');
+
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then((stream) => {
+      stream.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, stream);
+      });
+
+      return peerConnection.createOffer();
     })
-    .then(answer => {
-      return peerConnection.setLocalDescription(answer);
+    .then((offer) => {
+      peerConnection.setLocalDescription(offer);
+      return database.ref('calls/offer').set(offer);
     })
-    .then(() => {
-      sendSignalingMessage({ type: 'answer', answer: peerConnection.localDescription });
-    })
-    .catch(err => console.error('Error handling incoming call', err));
-}
+    .catch((error) => console.error(error));
 
-// Call button event
-document.getElementById('call-button').onclick = function() {
-  initiateCall();
-  document.getElementById('call-button').style.display = 'none';
-  document.getElementById('end-call-button').style.display = 'block';
-};
+  peerConnection.ontrack = (event) => {
+    remoteAudio.srcObject = new MediaStream(event.streams[0].getTracks());
+  };
 
-// End call button event
-document.getElementById('end-call-button').onclick = function() {
-  peerConnection.close();
-  document.getElementById('call-button').style.display = 'block';
-  document.getElementById('end-call-button').style.display = 'none';
-};
+  database.ref('calls/answer').on('value', (snapshot) => {
+    if (snapshot.val()) {
+      peerConnection.setRemoteDescription(new RTCSessionDescription(snapshot.val()));
+    }
+  });
 
-// Send chat messages
-document.getElementById('send-message').onclick = function() {
-  const message = document.getElementById('chat-message').value;
-  if (message.trim()) {
-    const msgElement = document.createElement('div');
-    msgElement.className = 'message user';
-    msgElement.innerText = message;
-    document.getElementById('chat-window').appendChild(msgElement);
-    document.getElementById('chat-message').value = ''; // Clear input field
-  }
-};
+  database.ref('calls/candidates').on('child_added', (snapshot) => {
+    const candidate = new RTCIceCandidate(snapshot.val());
+    peerConnection.addIceCandidate(candidate);
+  });
 
-// Get local media when page loads
-getLocalMedia();
+  peerConnection.onicecandidate = (event) => {
+    if (event.candidate) {
+      database.ref('calls/candidates').push(event.candidate);
+    }
+  };
+});
