@@ -171,3 +171,9 @@ a:hover {
 #exit-chat:hover {
   background-color: #e55d5d;
 }
+
+#no-user-alert {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}
