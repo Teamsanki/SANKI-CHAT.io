@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SANKI CHAT</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-database.js"></script>
-</head>
-<body>
+  <title>Social Bite Chat</title>
 
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database.js"></script>
+
+  <!-- Custom Script -->
+  <script src="script.js" defer></script>
+
+  <!-- Link to the external CSS -->
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
   <!-- Splash Screen -->
   <div id="splash-screen">
-    <h1>Welcome to SANKI CHAT</h1>
-    <p>Connecting people globally</p>
+    <h1>Welcome to Social Bite</h1>
+    <p>Connect with random users</p>
   </div>
 
   <!-- Login Page -->
   <div id="login-page">
     <h2>Login</h2>
     <form id="login-form">
-      <input type="email" id="email" placeholder="Enter your email" required>
-      <input type="password" id="password" placeholder="Enter your password" required>
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
       <button type="submit">Login</button>
-      <a href="#" id="register-link">Register</a>
+      <p>Don't have an account? <a href="#" id="register-link">Register</a></p>
     </form>
   </div>
 
@@ -32,30 +41,30 @@
   <div id="register-page">
     <h2>Register</h2>
     <form id="register-form">
-      <input type="email" id="reg-email" placeholder="Enter your email" required>
-      <input type="password" id="reg-password" placeholder="Enter your password" required>
-      <input type="text" id="reg-name" placeholder="Enter your name" required>
+      <input type="text" id="reg-name" placeholder="Your Name" required />
+      <input type="email" id="reg-email" placeholder="Email" required />
+      <input type="password" id="reg-password" placeholder="Password" required />
       <button type="submit">Register</button>
-      <a href="#" id="login-link">Login</a>
+      <p>Already have an account? <a href="#" id="login-link">Login</a></p>
     </form>
   </div>
 
   <!-- Home Page -->
   <div id="home-page">
-    <h2>Welcome <span id="user-name"></span></h2>
+    <h2>Home</h2>
+    <p>Welcome, <span id="user-name"></span></p>
     <button id="start-chat">Start Chat</button>
   </div>
 
   <!-- Chat Room -->
   <div id="chat-room">
-    <h2>SANKI CHAT Room</h2>
     <div id="chat-window"></div>
-    <textarea id="chat-message" placeholder="Type your message..." disabled></textarea>
-    <button id="send-message" disabled>Send</button>
+    <input type="text" id="chat-message" placeholder="Type your message..." />
+    <button id="send-message">Send</button>
     <button id="exit-chat">Exit Chat</button>
-    <div id="no-user-alert" style="color: red; display: none;">No random user found. Please try again later.</div>
+    <div id="no-user-alert" style="display:none;">No user found for chat</div>
   </div>
 
-  <script src="script.js"></script>
 </body>
+
 </html>
