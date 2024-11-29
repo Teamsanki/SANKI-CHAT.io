@@ -1,6 +1,6 @@
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyAemwBwNix4TbWHA7vrh5ubQaRqEY8VWKk",
+    apiKey: "AIzaSyAemwBwNix4TbWHA7vrh5ubQaRqEY8VWKk",
   authDomain: "social-bite-skofficial.firebaseapp.com",
   databaseURL: "https://social-bite-skofficial-default-rtdb.firebaseio.com",
   projectId: "social-bite-skofficial",
@@ -32,7 +32,6 @@ let currentUserId = null;
 
 // User authentication state change
 auth.onAuthStateChanged(user => {
-  console.log('Auth state changed:', user); // Debugging log
   if (user) {
     currentUserId = user.uid;
     homePage.style.display = 'block';
