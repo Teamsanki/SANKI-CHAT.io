@@ -32,6 +32,7 @@ let currentUserId = null;
 
 // User authentication state change
 auth.onAuthStateChanged(user => {
+  console.log('Auth state changed:', user); // Debugging log
   if (user) {
     currentUserId = user.uid;
     homePage.style.display = 'block';
@@ -39,6 +40,7 @@ auth.onAuthStateChanged(user => {
     userNameDisplay.textContent = user.displayName || 'User';
   } else {
     splashScreen.style.display = 'block';
+    loginPage.style.display = 'none';
   }
 });
 
