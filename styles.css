@@ -1,29 +1,173 @@
+/* Basic reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
+  background-color: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  flex-direction: column;
   margin: 0;
   padding: 0;
 }
 
+/* Splash Screen */
 #splash-screen {
-  background: #4caf50;
+  background-color: #007bff;
   color: white;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+#splash-screen h1 {
+  font-size: 3.5em;
+  font-weight: bold;
+}
+
+#splash-screen p {
+  font-size: 1.5em;
+  margin-top: 10px;
+}
+
+/* Login/Register Pages */
+#login-page, #register-page, #home-page, #chat-room {
+  display: none;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  background-color: white;
+}
+
+#login-page h2, #register-page h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
+}
+
+input[type="email"], input[type="password"], input[type="text"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fafafa;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+input[type="email"]:focus, input[type="password"]:focus, input[type="text"]:focus {
+  border-color: #007bff;
 }
 
 button {
-  padding: 10px;
-  background: #4caf50;
+  background-color: #007bff;
   color: white;
+  padding: 15px;
+  font-size: 1.2em;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Home Page */
+#home-page {
+  text-align: center;
+}
+
+#home-page h2 {
+  font-size: 2.5em;
+  color: #333;
+}
+
+#user-name {
+  font-weight: bold;
+  color: #007bff;
+}
+
+/* Chat Room */
+#chat-room {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px;
+  margin: auto;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+#chat-window {
+  height: 250px;
+  overflow-y: scroll;
+  background-color: #f9f9f9;
+  margin-bottom: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+}
+
+#chat-message {
+  width: 80%;
+  padding: 10px;
+  font-size: 1.1em;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fafafa;
+}
+
+.message {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #e7f7e7;
+  border-radius: 5px;
+  word-wrap: break-word;
+}
+
+.message.user {
+  background-color: #d3f9d8;
+  text-align: right;
+}
+
+.message.other {
+  background-color: #f0f0f0;
+  text-align: left;
+}
+
+#exit-chat {
+  background-color: #ff6b6b;
+}
+
+#exit-chat:hover {
+  background-color: #e55d5d;
 }
